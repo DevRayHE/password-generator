@@ -95,22 +95,16 @@ var generatePassword = function() {
           console.log(hasUpperCase);
           console.log(hasNumeric);
           console.log(hasSpecialChar);
-          // return {
-          //   hasLowerCase: hasLowerCase,
-          //   hasUpperCase: hasUpperCase,
-          //   hasNumeric: hasNumeric,
-          //   hasSpecialChar: hasSpecialChar
-          // };
           return [hasLowerCase, hasUpperCase, hasNumeric, hasSpecialChar];
         }
       }
 
-      validateCharTypeInput();
+      return validateCharTypeInput();
     }
 
     // Defines a function to validate at least 1 character type is chosen.
     
-    var testLengthFunc = getLengthInput();
+    // var testLengthFunc = getLengthInput();
     // var testCharInputArray = getCharType();
 
     // var testL = {
@@ -122,28 +116,57 @@ var generatePassword = function() {
 
     // var [a, b, c, d] = getCharType();
 
-    var a = getCharType[0];
+    // var a = getCharType();
 
-    console.log("variable: " + testLengthFunc);
+    // console.log("variable: " + testLengthFunc);
   
     // console.log("array: " + testL.a + testL.b);
 
     // console.log(a + b + c + d);
-    console.log(a);
+    // console.log(a);
 
-    // var genPassword = function(passwordLength, ) {
+    var genPassword = function(passwordLength = getLengthInput(), charType = getCharType()) {
+      
+      var password = "";
+      var passwordSelection = "";
+      // Define variables to store each characters types selection for clarify.
+      var hasLowerCase = charType[0];
+      var hasUpperCase = charType[1];
+      var hasNumeric = charType[2];
+      var hasSpecialChar = charType[3];
 
-    // }
+      // Concatinate character types to passwordSelection, based on user selection.
+      if (hasLowerCase) {
+        passwordSelection += lowerCase;
+      }
 
+      if (hasUpperCase) {
+        passwordSelection += upperCase;
+      }
+
+      if (hasNumeric) {
+        passwordSelection += numeric;
+      }
+
+      if (hasSpecialChar) {
+        passwordSelection += specialChar;
+      }
+
+      for (i=0; i<passwordLength; i++) {
+        password += passwordSelection.charAt(Math.floor(Math.random() * passwordSelection.length)); 
+      }
+      return password;
+    }
 
     getLengthInput();
     getCharType();
-    // // lesson learnt, calling a function without passing a parameters when its expected, the parameters will become undefined!!
-    // validateCharTypeInput(hasLowerCase, hasUpperCase, hasNumeric, hasSpecialChar);
-    mainFunction();
+    var password = genPassword();
+    console.log(password);
+    // lesson learnt, calling a function without passing a parameters when its expected, the parameters will become undefined!!
+    return password;
   }
 
-  mainFunction();
+ return mainFunction();
 }
 
 
