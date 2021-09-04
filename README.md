@@ -35,7 +35,7 @@
 
 The link to the deployed site:
 
-[Deployed site]()
+[Deployed site](https://devrayhe.github.io/password-generator/)
 
 The link to the repo url:
 
