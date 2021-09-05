@@ -13,6 +13,7 @@ function writePassword() {
 // Add event listener to generate button
 generateBtn.addEventListener("click", writePassword);
 
+// Define the function to generate password.
 var generatePassword = function() {
 
   // Description of criteria, using string literals from ES6.
@@ -44,10 +45,14 @@ var generatePassword = function() {
     // non numbers input will be converted to NaN.
     passwordLength = Number(lengthInput);
 
-    if (isNaN(passwordLength) || passwordLength < 4 || passwordLength > 128) {
+    // Only accepts input which is number, and between 8 to 128 only.
+    var invalidInput = (isNaN(passwordLength) || passwordLength < 4 || passwordLength > 128);
+
+    if (invalidInput) {
       // Alert error message due to invalid input or password length invalid.
       window.alert("Invalid input! Enter password length numbers only and between 8 to 128.");
       // Calling the function again if invalid input, until valid input is received.
+      // return in front of calling self again, otherwise return value will be undefined.
       return getLengthInput();
     } else {
       window.alert("The password length is: " + passwordLength);
@@ -62,16 +67,6 @@ var generatePassword = function() {
     hasNumeric = window.confirm("Include numeric characters in the password?");
     hasSpecialChar = window.confirm("Include special characters in the password?");
 
-    // var validateCharTypeInput = function() { 
-    //   // Check and alert error message if none of the character type is selected.
-    //   if ((hasLowerCase + hasUpperCase + hasNumeric + hasSpecialChar) == 0) {
-    //     window.confirm("Selection error! Please select at least 1 character types.");
-    //     return getCharType();
-    //   } else {
-    //     return [hasLowerCase, hasUpperCase, hasNumeric, hasSpecialChar];
-    //   }
-    // }
-
     // Check and alert error message if none of the character type is selected.
     if ((hasLowerCase + hasUpperCase + hasNumeric + hasSpecialChar) == 0) {
       window.confirm("Selection error! Please select at least 1 character types.");
@@ -80,11 +75,7 @@ var generatePassword = function() {
       // Return the validated characters types.
       return [hasLowerCase, hasUpperCase, hasNumeric, hasSpecialChar];
     }
-
-    // return validateCharTypeInput();
   }
-
-  // Defines a function to validate at least 1 character type is chosen.
 
   // Function to generate password, password length and characters type as parameters.
   var genPassword = function(passwordLength = getLengthInput(), charType = getCharType()) {
@@ -101,8 +92,6 @@ var generatePassword = function() {
     var specialChar = [charType[3], " !\"#$%&'()*+,-./:;<=>?@[\]^_`{|}~"];
 
     var passwordSelection = "";
-    
-    console.log("PL: " + passwordLength, "\n charAt: " + charType);
 
     // Concatinate character types to passwordSelection, based on user selection.
     if (lowerCase[0]) {
@@ -170,7 +159,8 @@ var generatePassword = function() {
     var specialCharChecked = false;
 
     // Call validate password function until a valid password with at least 1 of selected character types each is generated and validated.
-    while ((lowerCaseChecked && upperCaseChecked && numericChecked && specialCharChecked) !== true) {
+    var allValid = (lowerCaseChecked && upperCaseChecked && numericChecked && specialCharChecked);
+    while (!allValid) {
       lowerCaseChecked = validatePassword(lowerCase[0], lowerCase[1]);
       upperCaseChecked = validatePassword(upperCase[0], upperCase[1]);
       numericChecked = validatePassword(numeric[0], numeric[1]);
@@ -179,81 +169,15 @@ var generatePassword = function() {
 
     console.log("Password is " + password);
     return password;
-
-    // if (hasUpperCase) {
-    //   for (var i=0; i<passwordLength; i++) {
-    //     if (password.includes(upperCase.charAt(i))) {
-    //       validPassword = true;
-    //       break;
-    //     }
-    //     else {
-    //       console.log("character not detected! " + i + "  " + "character is...  " + upperCase.charAt(i));
-    //       // password = genPassword(passwordLength, charType);
-    //     }
-    //   }
-    //   if (validPassword === false) {
-    //     console.log("false detected");
-    //     password = concatinatePassword();
-    //   }
-    // }
-
-    // if (hasNumeric) {
-    //   for (var i=0; i<passwordLength; i++) {
-    //     if (password.includes(numeric.charAt(i))) {
-    //       validPassword = true;
-    //       break;
-    //     }
-    //     else {
-    //       console.log("Character not detected! " + i + "  " + "character is...  " + numeric.charAt(i));
-    //       // password = genPassword(passwordLength, charType);
-    //     }
-    //   }
-    //   if (validPassword === false) {
-    //     console.log("false detected");
-    //     password = concatinatePassword();
-    //   }
-    // }
-    
-    // if (hasSpecialChar) {
-    //   for (var i=0; i<passwordLength; i++) {
-    //     if (password.includes(specialChar.charAt(i))) {
-    //       validPassword = true;
-    //       break;
-    //     }
-    //     else {
-    //       console.log("character not detected! " + i + "  " + "Character is " + specialChar.charAt(i));
-    //       // password = genPassword(passwordLength, charType);
-    //     }
-    //   }
-    //   if (validPassword === false) {
-    //     console.log("false detected");
-    //     password = concatinatePassword();
-    //   }
-    // }
-
-    // After checked valid password, return password.
-    // if (validPassword === true) {
-    //   return password;
-    // } // If invalid password then Call the the genPassword function to generate password again.
-    // else {
-    //   console.log("ERRRROR detected!! ");
-    // }
   }
 
   var password = genPassword();
-
-  // var validatePassword = function (password, charType = getCharType()) {
-  //   var testA = ['a','b','c'];
-  // }
 
   // lesson learnt, calling a function without passing a parameters when its expected, the parameters will become undefined!!
   return password;
 }
 
-// Password validation:
-  // 1. check whether the user criteria is met (such as if uppercase is chosen, need to have at least 1 uppercase character in the password) 
-
-  // 2. other checks? Edge cases to minimize error.
+// Edge cases to implement a solution, what if space is part of the password and it's either in front of end of the password, users will not be able to tell, best to eliminate this edge cases, even tho chances are slim.
 
 
 
