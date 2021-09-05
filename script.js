@@ -46,6 +46,7 @@ var generatePassword = function() {
     passwordLength = Number(lengthInput);
 
     // Only accepts input which is number, and between 8 to 128 only.
+    // Changed to 4 characters to check edge cases, space in front or end of password.
     var invalidInput = (isNaN(passwordLength) || passwordLength < 4 || passwordLength > 128);
 
     if (invalidInput) {
@@ -83,13 +84,14 @@ var generatePassword = function() {
     // Array position 0 stores boolean value whether that character Type is selected,
     // Array poaistion 1 stores actual characters.  
     var lowerCase = [charType[0], "abcdefghijklmnopqrstuvwxyz"];
-    console.log(lowerCase[0], + "...." + lowerCase[1]);
 
     var upperCase = [charType[1], "ABCDEFGHIJKLMNOPQRSTUVWXYZ"];
 
     var numeric = [charType[2], "0123456789"];
 
-    var specialChar = [charType[3], " !\"#$%&'()*+,-./:;<=>?@[\]^_`{|}~"];
+    // var specialChar = [charType[3], " !\"#$%&'()*+,-./:;<=>?@[\]^_`{|}~"];
+    // Changed special characters to space only to verify added password check function.
+    var specialChar = [charType[3], " "];
 
     var passwordSelection = "";
 
@@ -109,6 +111,7 @@ var generatePassword = function() {
     if (specialChar[0]) {
       passwordSelection += specialChar[1];
     }
+    console.log(passwordSelection);
 
     var concatinatePassword = function () {
       var pass = "";
@@ -116,29 +119,29 @@ var generatePassword = function() {
       for (var i=0; i<passwordLength; i++) {
         pass += passwordSelection.charAt(Math.floor(Math.random() * passwordSelection.length)); 
       }
+      console.log("NEW password: " + password);
       return pass;
     }
 
     var password = concatinatePassword();
-    console.log("p: " + password);
 
     // Function to check password validation, takes in two parameters.
     // needToCheck is a boolean value, which is whether the character type has been selected.
     // charToCheck is the string value of the characters
     var validatePassword = function (needToCheck, charToCheck) {
+      console.log(charToCheck);
       var passwordIsValid = false;
       if (needToCheck) {
         // Loop through each string of password to check whether selected character type is generated at least once.
-        for (var i=0; i<passwordLength; i++) {
+        for (var i=0; i<charToCheck.length; i++) {
+          console.log("length is : " + charToCheck.length);
+          console.log("Checking : " + charToCheck.charAt(i));
           if (password.includes(charToCheck.charAt(i))) {
-            // console.log(lowerCase.charAt(i))
-            // console.log(i + lowerCase.charAt(i));
+            console.log("Match fund! : " + charToCheck.charAt(i));
+            console.log(charToCheck.charAt(i) + "is In Password: " + password + "  Interation " + i );
             // Found a selected character type in password, return true and exit this function call.
             return true;
           }
-          // else {
-          //   console.log("character not detected! " + i + "  " + "character is...  " + lowerCase.charAt(i));
-          // }
         }
         // Checked through password, if the selected character type not included, generate password again.
         if (passwordIsValid === false) {
@@ -153,17 +156,43 @@ var generatePassword = function() {
       }
     }
 
+    // Function to check whether space is in the front or end of the password.
+    // Edge cases to implement a solution, what if space is part of the password and it's either in front of end of the password, users will not be able to tell, best to eliminate this edge cases, even tho chances are slim.
+    var checkSpaces = function () {
+      var firstCharIsSpace = false;
+      var lastCharIsSpace = false;
+      if (password.charAt(0) === " ") {
+        firstCharIsSpace = true;
+        password += " PLEASE NOTE, FIRST LETTER OF THE GENERATED PASSWORD IS A SPACE, WHICH COULD NOT BE DISPLAYED."
+        console.log("first char is space!!!");
+      }
+      if (password.charAt(password.length - 1) === " ") {
+        lastCharIsSpace = true;
+        password += " PLEASE NOTE, LAST LETTER OF THE GENERATED PASSWORD IS A SPACE, WHICH COULD NOT BE DISPLAYED."
+        console.log("last char is space!!!");
+      }
+
+      if ( (firstCharIsSpace !== true) && (lastCharIsSpace !== true) ) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
+
     var lowerCaseChecked = false;
     var upperCaseChecked = false;
     var numericChecked = false;
     var specialCharChecked = false;
+    var spacesChecked = false;
 
-    // Call validate password function until a valid password with at least 1 of selected character types each is generated and validated.
-    var allValid = (lowerCaseChecked && upperCaseChecked && numericChecked && specialCharChecked);
-    while (!allValid) {
+    // Call validate password function until a valid password with at least 1 of selected character types each is generated and validated. As well as space not at the front or in the end.
+    // while ((lowerCaseChecked && upperCaseChecked && numericChecked && specialCharChecked && spacesChecked) !== true ) {
+    while ((lowerCaseChecked && upperCaseChecked && numericChecked && specialCharChecked) !== true ) {
+      spacesChecked = checkSpaces();
+      numericChecked = validatePassword(numeric[0], numeric[1]);
       lowerCaseChecked = validatePassword(lowerCase[0], lowerCase[1]);
       upperCaseChecked = validatePassword(upperCase[0], upperCase[1]);
-      numericChecked = validatePassword(numeric[0], numeric[1]);
       specialCharChecked = validatePassword(specialChar[0], specialChar[1]);
     }
 
@@ -177,7 +206,7 @@ var generatePassword = function() {
   return password;
 }
 
-// Edge cases to implement a solution, what if space is part of the password and it's either in front of end of the password, users will not be able to tell, best to eliminate this edge cases, even tho chances are slim.
+
 
 
 
