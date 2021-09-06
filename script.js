@@ -28,35 +28,39 @@ var generatePassword = function() {
     At least one character type should be selected.
 
     Simply follow the prompt and generate a secure password!
+
+    At least one character type will be included.
+
+    Has excluded password starts or ends with space.
   `
   // Prompt to explain the program.
   window.alert(programDesc);
 
-  //(parseInt(passLength.replace(/\s+/g, ""), 10) a better practise.
-  // alert(typeof(Number(passLength)));
+  //(parseInt(passLength.replace(/\s+/g, ""), 10) is this a better practise?
   
   // passLength === NaN or passLength == NaN will return false, isNan() is the proper way to validate NaN.
   // Validate input (not less than 8 or bigger than 128) and then store userinput .
   var getLengthInput = function() {
-    // Only ask for input when empty.
+    // User input will return a string.
     var lengthInput = window.prompt("Enter password length(numbers only):");
     
-    // Convert user input to be a number variable to validate input.
+    // Convert the input string to be a number variable to validate input.
     // non numbers input will be converted to NaN.
     passwordLength = Number(lengthInput);
 
     // Only accepts input which is number, and between 8 to 128 only.
-    // Changed to 4 characters to check edge cases, space in front or end of password.
-    var invalidInput = (isNaN(passwordLength) || passwordLength < 4 || passwordLength > 128);
+    // Can change the passwordLength to 4 characters to check edge cases, space in front or end of password.
+    // But be ware, if chose 4 characters and selected all 4 character types, as well as changing the special character to " "(space) only, the program will run for a little while to generate the password which matches all criteria (at least 1 character types each and spaces not in front or end.)
+    var invalidInput = (isNaN(passwordLength) || passwordLength < 8 || passwordLength > 128);
 
     if (invalidInput) {
       // Alert error message due to invalid input or password length invalid.
       window.alert("Invalid input! Enter password length numbers only and between 8 to 128.");
       // Calling the function again if invalid input, until valid input is received.
-      // return in front of calling self again, otherwise return value will be undefined.
+      // return in front of calling self, otherwise return value will be undefined.
       return getLengthInput();
     } else {
-      window.alert("The password length is: " + passwordLength);
+      // window.alert("The password length is: " + passwordLength); - to Verify input.
       return passwordLength;
     }
   }
@@ -81,6 +85,9 @@ var generatePassword = function() {
   // Function to generate password, password length and characters type as parameters.
   var genPassword = function(passwordLength = getLengthInput(), charType = getCharType()) {
     
+    // charType is an Array, position 0 is the boolean status of whehter lower case is chosen by user,
+    // position 1 for upper case, position 2 for numeric, position 3 for special char.
+
     // Array position 0 stores boolean value whether that character Type is selected,
     // Array poaistion 1 stores actual characters.  
     var lowerCase = [charType[0], "abcdefghijklmnopqrstuvwxyz"];
@@ -89,9 +96,9 @@ var generatePassword = function() {
 
     var numeric = [charType[2], "0123456789"];
 
-    // var specialChar = [charType[3], " !\"#$%&'()*+,-./:;<=>?@[\]^_`{|}~"];
+    var specialChar = [charType[3], " !\"#$%&'()*+,-./:;<=>?@[\]^_`{|}~"];
     // Changed special characters to space only to verify added password check function.
-    var specialChar = [charType[3], " "];
+    // var specialChar = [charType[3], " "];
 
     var passwordSelection = "";
 
@@ -111,15 +118,16 @@ var generatePassword = function() {
     if (specialChar[0]) {
       passwordSelection += specialChar[1];
     }
-    console.log(passwordSelection);
+    // console.log(passwordSelection);
 
     var concatinatePassword = function () {
+      // Define local variable to keep the code clean.
       var pass = "";
       // Loop to generate and concatinate to password string.
       for (var i=0; i<passwordLength; i++) {
         pass += passwordSelection.charAt(Math.floor(Math.random() * passwordSelection.length)); 
       }
-      console.log("NEW password: " + password);
+      // console.log("NEW password: " + password);
       return pass;
     }
 
@@ -129,28 +137,31 @@ var generatePassword = function() {
     // needToCheck is a boolean value, which is whether the character type has been selected.
     // charToCheck is the string value of the characters
     var validatePassword = function (needToCheck, charToCheck) {
-      console.log(charToCheck);
+      // console.log(charToCheck);
       var passwordIsValid = false;
+      // Only check if the character type is selected.
       if (needToCheck) {
         // Loop through each string of password to check whether selected character type is generated at least once.
         for (var i=0; i<charToCheck.length; i++) {
-          console.log("length is : " + charToCheck.length);
-          console.log("Checking : " + charToCheck.charAt(i));
+          // console.log("length is : " + charToCheck.length);
+          // console.log("Checking : " + charToCheck.charAt(i));
           if (password.includes(charToCheck.charAt(i))) {
-            console.log("Match fund! : " + charToCheck.charAt(i));
-            console.log(charToCheck.charAt(i) + "is In Password: " + password + "  Interation " + i );
+            // console.log("Match fund! : " + charToCheck.charAt(i));
+            // console.log(charToCheck.charAt(i) + "is In Password: " + password + "  Interation " + i );
             // Found a selected character type in password, return true and exit this function call.
             return true;
           }
         }
         // Checked through password, if the selected character type not included, generate password again.
         if (passwordIsValid === false) {
-          console.log("false detected");
+          // console.log("false detected");
           // Generate a new password by calling the concatinatePassword function.
           password = concatinatePassword();
+          // Calling self to Validate the new generated password until it's valid.
           validatePassword(needToCheck, charToCheck);
         }
       }
+      // Return true if character type is not selected, as check is not needed.
       else {
         return true;
       }
@@ -161,18 +172,17 @@ var generatePassword = function() {
     var checkSpaces = function () {
       var firstCharIsSpace = false;
       var lastCharIsSpace = false;
+      // If first character is space.
       if (password.charAt(0) === " ") {
         firstCharIsSpace = true;
-        password += " PLEASE NOTE, FIRST LETTER OF THE GENERATED PASSWORD IS A SPACE, WHICH COULD NOT BE DISPLAYED."
-        console.log("first char is space!!!");
       }
+      // If last character is space.
       if (password.charAt(password.length - 1) === " ") {
         lastCharIsSpace = true;
-        password += " PLEASE NOTE, LAST LETTER OF THE GENERATED PASSWORD IS A SPACE, WHICH COULD NOT BE DISPLAYED."
-        console.log("last char is space!!!");
       }
 
       if ( (firstCharIsSpace !== true) && (lastCharIsSpace !== true) ) {
+        // Return true value if only space is not at the front or end of password.
         return true;
       }
       else {
@@ -187,8 +197,9 @@ var generatePassword = function() {
     var spacesChecked = false;
 
     // Call validate password function until a valid password with at least 1 of selected character types each is generated and validated. As well as space not at the front or in the end.
-    // while ((lowerCaseChecked && upperCaseChecked && numericChecked && specialCharChecked && spacesChecked) !== true ) {
-    while ((lowerCaseChecked && upperCaseChecked && numericChecked && specialCharChecked) !== true ) {
+    // Added 5th condition to check, make sure space is not at the front or end of password.
+    while ((lowerCaseChecked && upperCaseChecked && numericChecked && specialCharChecked && spacesChecked) !== true ) {
+    // while ((lowerCaseChecked && upperCaseChecked && numericChecked && specialCharChecked) !== true ) {
       spacesChecked = checkSpaces();
       numericChecked = validatePassword(numeric[0], numeric[1]);
       lowerCaseChecked = validatePassword(lowerCase[0], lowerCase[1]);
@@ -196,13 +207,10 @@ var generatePassword = function() {
       specialCharChecked = validatePassword(specialChar[0], specialChar[1]);
     }
 
-    console.log("Password is " + password);
     return password;
   }
 
   var password = genPassword();
-
-  // lesson learnt, calling a function without passing a parameters when its expected, the parameters will become undefined!!
   return password;
 }
 
