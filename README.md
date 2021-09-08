@@ -19,6 +19,8 @@
 
 - Password automatic and randomly generated based on user input to match user criteria.
 
+- Password validation: at least one character from selected types will be included, excluded password starts or ends with space.
+
 
 <br/>
 
@@ -28,7 +30,7 @@
 <br/>
 
 ### Sample website intro video.
-![Sample gif video.](gif "video")
+![Sample gif video.](.\assets\image\password-generator-example-video.gif "video")
 <br/>
 
 # 📝 Installation
