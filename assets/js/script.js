@@ -35,13 +35,11 @@ var generatePassword = function() {
   `
   // Prompt to explain the program.
   window.alert(programDesc);
-
-  //(parseInt(passLength.replace(/\s+/g, ""), 10) is this a better practise?
   
   // passLength === NaN or passLength == NaN will return false, isNan() is the proper way to validate NaN.
   // Validate input (not less than 8 or bigger than 128) and then store userinput .
   var getLengthInput = function() {
-    // User input will return a string.
+    // User input will return a string only.
     var lengthInput = window.prompt("Enter password length(numbers only):");
     
     // Convert the input string to be a number variable to validate input.
@@ -49,8 +47,6 @@ var generatePassword = function() {
     passwordLength = Number(lengthInput);
 
     // Only accepts input which is number, and between 8 to 128 only.
-    // Can change the passwordLength to 4 characters to check edge cases, space in front or end of password.
-    // But be ware, if chose 4 characters and selected all 4 character types, as well as changing the special character to " "(space) only, the program will run for a little while to generate the password which matches all criteria (at least 1 character types each and spaces not in front or end.)
     var invalidInput = (isNaN(passwordLength) || passwordLength < 8 || passwordLength > 128);
 
     if (invalidInput) {
@@ -82,7 +78,7 @@ var generatePassword = function() {
     }
   }
 
-  // Function to generate password, password length and characters type as parameters.
+  // Function to generate password, passed in password length and characters type as parameters.
   var genPassword = function(passwordLength = getLengthInput(), charType = getCharType()) {
     
     // charType is an Array, position 0 is the boolean status of whehter lower case is chosen by user,
@@ -97,8 +93,6 @@ var generatePassword = function() {
     var numeric = [charType[2], "0123456789"];
 
     var specialChar = [charType[3], " !\"#$%&'()*+,-./:;<=>?@[\]^_`{|}~"];
-    // Changed special characters to space only to verify added password check function.
-    // var specialChar = [charType[3], " "];
 
     var passwordSelection = "";
 
@@ -118,7 +112,6 @@ var generatePassword = function() {
     if (specialChar[0]) {
       passwordSelection += specialChar[1];
     }
-    // console.log(passwordSelection);
 
     var concatinatePassword = function () {
       // Define local variable to keep the code clean.
@@ -127,7 +120,6 @@ var generatePassword = function() {
       for (var i=0; i<passwordLength; i++) {
         pass += passwordSelection.charAt(Math.floor(Math.random() * passwordSelection.length)); 
       }
-      // console.log("NEW password: " + password);
       return pass;
     }
 
@@ -137,19 +129,17 @@ var generatePassword = function() {
     // needToCheck is a boolean value, which is whether the character type has been selected.
     // charToCheck is the string value of the characters
     var validatePassword = function (needToCheck, charToCheck) {
-      // console.log(charToCheck);
       var passwordIsValid = false;
       // Only check if the character type is selected.
       if (needToCheck) {
         // Loop through each string of password to check whether selected character type is generated at least once.
         for (var i=0; i<charToCheck.length; i++) {
-          // console.log("Checking : " + charToCheck.charAt(i));
           if (password.includes(charToCheck.charAt(i))) {
-            // Found a selected character type in password, return true and exit this function call.
+            // when a selected character type in matched in password, return true and exit this function call.
             return true;
           }
         }
-        // Checked through password, if the selected character type not included, generate password again.
+        // After the for loop checked through password, if the selected character type not included, generate password again.
         if (passwordIsValid === false) {
           // Generate a new password by calling the concatinatePassword function.
           password = concatinatePassword();
@@ -164,8 +154,7 @@ var generatePassword = function() {
     }
 
     // Function to check whether space is in the front or end of the password.
-    // Edge cases to implement a solution, what if space is part of the password and it's either in front of end of the password, users will not be able to tell, best to eliminate this edge cases, even tho chances are slim.
-    var checkSpaces = function () {
+    var checkSpace = function () {
       var firstCharIsSpace = false;
       var lastCharIsSpace = false;
       // If first character is space.
@@ -195,7 +184,7 @@ var generatePassword = function() {
     // Call validate password function until a valid password with at least 1 of selected character types each is generated and validated. As well as space not at the front or in the end.
     // Added 5th condition to check, make sure space is not at the front or end of password.
     while ((lowerCaseChecked && upperCaseChecked && numericChecked && specialCharChecked && spacesChecked) !== true ) {
-      spacesChecked = checkSpaces();
+      spacesChecked = checkSpace();
       numericChecked = validatePassword(numeric[0], numeric[1]);
       lowerCaseChecked = validatePassword(lowerCase[0], lowerCase[1]);
       upperCaseChecked = validatePassword(upperCase[0], upperCase[1]);
