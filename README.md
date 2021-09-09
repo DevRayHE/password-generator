@@ -30,7 +30,8 @@
 <br/>
 
 ### Sample website intro video.
-![Sample gif video.](.\assets\image\password-generator-example-video.gif "video")
+![Sample gif video.](./assets/image/password-generator-example-video.gif "video")
+
 <br/>
 
 # 📝 Installation
